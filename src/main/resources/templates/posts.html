@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Лента постов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .post {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+        }
+        .tags {
+            color: #555;
+        }
+        .pagination {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>Лента постов</h1>
+<div th:each="post : ${posts}">
+    <div class="post-preview">
+        <!-- Название поста -->
+        <h2>
+            <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+        </h2>
+
+        <!-- Картинка -->
+        <img th:if="${post.imageUrl}" th:src="${post.imageUrl}" alt="Post Image" style="max-width: 200px;">
+
+        <!-- Превью текста -->
+        <p th:text="${post.contentPreview}"></p>
+
+        <!-- Теги -->
+        <div>
+            <span th:each="tag : ${post.tags}" th:text="${tag} + ' '" style="color: blue;"></span>
+        </div>
+
+        <!-- Количество комментариев -->
+        <p>Комментарии: <span th:text="${post.commentCount}"></span></p>
+
+        <!-- Количество лайков -->
+        <p>Лайки: <span th:text="${post.likes}"></span></p>
+    </div>
+    <hr>
+</div>
+
+<!-- Пагинация -->
+<div>
+        <span th:if="${currentPage > 1}">
+            <a th:href="@{/posts(page=${currentPage - 1}, size=${sizePage}, filter=${filterTag})}">Предыдущая</a>
+        </span>
+    <span th:text="${currentPage} + ' / ' + ${totalPages}"></span>
+    <span th:if="${currentPage < totalPages}">
+            <a th:href="@{/posts(page=${currentPage + 1}, size=${sizePage}, filter=${filterTag})}">Следующая</a>
+        </span>
+</div>
+</body>
+</html>
