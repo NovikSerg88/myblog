@@ -1,6 +1,14 @@
 package com.novik.myblog.model;
 
-public class Post {
+import lombok.*;
 
-    private int id;
+@Data
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class Tag {
+
+    private Long id;
+
+    @NonNull
+    private String title;
 }
