@@ -14,7 +14,7 @@ public class NewPostDto {
     public String title;
 
     @NonNull
-    public String text;
+    public String content;
 
     public String imageUrl;
 

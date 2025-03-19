@@ -5,6 +5,7 @@ import lombok.*;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
 
     private Long id;
