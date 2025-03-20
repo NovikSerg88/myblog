@@ -1,6 +1,7 @@
 package com.novik.myblog.service;
 
 import com.novik.myblog.dto.NewPostDto;
+import com.novik.myblog.mapper.PostMapper;
 import com.novik.myblog.model.Post;
 import com.novik.myblog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final PostMapper postMapper;
 
     @Override
     public Post save(NewPostDto newPostDto) {
-
-        Post post =
-        return postRepository.save();
+        Post post = postMapper.toModel(newPostDto);
+        return postRepository.save(post);
     }
 }
