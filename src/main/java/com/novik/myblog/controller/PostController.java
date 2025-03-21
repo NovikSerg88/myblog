@@ -2,6 +2,7 @@ package com.novik.myblog.controller;
 
 import com.novik.myblog.dto.NewPostDto;
 import com.novik.myblog.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public String save(@ModelAttribute NewPostDto newPostDto) {
+    public String save(@Valid @ModelAttribute NewPostDto newPostDto) {
         log.info("Create new post: {}", newPostDto);
         postService.save(newPostDto);
 
