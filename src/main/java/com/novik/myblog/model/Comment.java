@@ -5,6 +5,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     private Long id;

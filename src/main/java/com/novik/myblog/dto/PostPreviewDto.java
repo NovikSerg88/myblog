@@ -3,9 +3,9 @@ package com.novik.myblog.dto;
 import com.novik.myblog.model.Comment;
 import com.novik.myblog.model.Tag;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,20 +15,21 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PostShortDto {
+@Builder
+public class PostPreviewDto {
 
-    private Long id;
+    public Long id;
 
-    private String title;
+    public String title;
 
-    private String content;
+    public String previewText;
 
-    private String imageUrl;
+    public String imageUrl;
 
-    private int likesCount;
+    public int likesCount;
 
-    private List<Comment> comments = new ArrayList<>();
+    public int commentsCount;
 
-    private Set<Tag> tags = new HashSet<>();
+    public Set<String> tags;
 
 }

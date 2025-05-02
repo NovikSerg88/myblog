@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Лента постов</title>
+</head>
+
+<body>
+<form method="GET" action="/my-blog/posts/add">
+    <button style="float:right;">ДОБАВИТЬ ПОСТ</button>
+</form>
+<table style="width:50%;margin-left:auto;margin-right:auto;">
+    <tr>
+        <td>
+            <form>
+                <p>
+                    <label for="tag">Найти по тегу: </label>
+                    <input id="tag" style="width:300px;" name="tag" th:value="${tag}">
+                    <button name="action">&#128269;</button>
+                </p>
+                <p>
+                    <label for="size">Число постов: </label>
+                    <select id="size" name="size" onchange="this.form.submit()">
+                        <option value="10" th:selected="${size==10}">10</option>
+                        <option value="20" th:selected="${size==20}">20</option>
+                        <option value="50" th:selected="${size==50}">50</option>
+                    </select>
+                </p>
+                <p>
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/posts(page=${currentPage - 1}, size=${size}, tag=${tag})}"
+                       style="padding: 5px 10px; border: 1px solid #ccc;">
+                        &lt;
+                    </a>
+                    <span th:text="'Страница: ' + ${currentPage}"></span>
+                    <a th:href="@{/posts(page=${currentPage + 1}, size=${size}, tag=${tag})}"
+                       style="padding: 5px 10px; border: 1px solid #ccc;">
+                        &gt;
+                    </a>
+                </p>
+            </form>
+        </td>
+    </tr>
+
+    <tr th:each="post : ${posts}">
+        <td style="border-bottom:thin solid;">
+            <h2 th:text="${post.getTitle()}"></h2>
+            <p>
+                <a th:href="${'/posts/' + post.getId()}">
+                    <img th:src="@{${post.imageUrl}}" height="300">
+                </a>
+            </p>
+            <p th:text="${post.previewText}"></p>
+            <p>
+                <span th:text="${'&#x1F44D; '+post.likesCount}"></span>
+                <span th:text="${'&#x2709; '+post.commentsCount}"></span>
+            </p>
+            <p>
+                <span th:each="tag : ${post.tags}" th:text="${'#'+tag+' '}"></span>
+            </p>
+        </td>
+    </tr>
+</table>
+</body>
