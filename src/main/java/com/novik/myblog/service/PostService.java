@@ -16,4 +16,6 @@ public interface PostService {
     PostDto findById(Long id);
 
     List<Post> findAll(int page, int size);
+
+    List<Post> findByTagId(Long tagId, int page, int size);
 }

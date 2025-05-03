@@ -7,6 +7,7 @@ import com.novik.myblog.dto.PostPreviewDto;
 import com.novik.myblog.mapper.PostMapper;
 import com.novik.myblog.model.Post;
 import com.novik.myblog.service.PostService;
+import com.novik.myblog.service.TagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +25,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final TagService tagService;
     private final PostMapper postMapper;
 
     @PostMapping
@@ -38,8 +41,15 @@ public class PostController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             Model model) {
+        List<Post> posts;
+        if (tag != null && !tag.isEmpty()) {
+            posts = tagService.findTagByTitle(tag)
+                    .map(t -> postService.findByTagId(t.getId(), page, size))
+                    .orElseGet(Collections::emptyList);
+        } else {
+            posts = postService.findAll(page, size);
+        }
 
-        List<Post> posts = postService.findAll(page, size);
         List<PostPreviewDto> dtos = posts.stream().map(postMapper::toPreviewDto).toList();
 
         model.addAttribute("posts", dtos);

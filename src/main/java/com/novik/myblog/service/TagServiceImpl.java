@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,13 @@ public class TagServiceImpl implements TagService {
         tagRepository.savePostTags(postId, tagId);
     }
 
+    @Override
+    public Optional<Tag> findTagByTitle(String title) {
+        return tagRepository.findTagByTitle(title);
+    }
+
     private Tag findOrCreateTag(String tagTitle) {
-        return tagRepository.findByTitle(tagTitle)
+        return tagRepository.findTagByTitle(tagTitle)
                 .orElseGet(() -> {
                     Tag newTag = new Tag();
                     newTag.setTitle(tagTitle);

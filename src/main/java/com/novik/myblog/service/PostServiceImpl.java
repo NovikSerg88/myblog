@@ -67,6 +67,11 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllPostsWithTags(size, page * size);
     }
 
+    @Override
+    public List<Post> findByTagId(Long tagId, int page, int size) {
+        return postRepository.findByTagIds(List.of(tagId), size, page * size);
+    }
+
 
 }
 

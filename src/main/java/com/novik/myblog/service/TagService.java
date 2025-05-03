@@ -2,6 +2,7 @@ package com.novik.myblog.service;
 
 import com.novik.myblog.model.Tag;
 
+import java.util.Optional;
 import java.util.Set;
 
 public interface TagService {
@@ -11,4 +12,6 @@ public interface TagService {
     void addPostTags(Long postId);
 
     void savePostTags(Long postId, Long tagId);
+
+    Optional<Tag> findTagByTitle(String title);
 }

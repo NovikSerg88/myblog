@@ -9,7 +9,7 @@ public interface TagRepository {
 
     Tag save(Tag tag);
 
-    Optional<Tag> findByTitle(String title);
+    Optional<Tag> findTagByTitle(String title);
 
     Optional<Long> findTagIdByTitle(String title);
 

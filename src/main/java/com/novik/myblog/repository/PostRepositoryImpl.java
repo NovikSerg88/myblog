@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +99,39 @@ public class PostRepositoryImpl implements PostRepository {
                         "LEFT JOIN tags as t ON pt.tag_id = t.id ";
 
         return jdbcTemplate.query(sql, new PostWithTagsRowMapper(), limit, offset);
+    }
+
+    @Override
+    public List<Post> findByTagIds(List<Long> tagIds, int limit, int offset) {
+        String inSql = String.join(",", Collections.nCopies(tagIds.size(), "?"));
+
+        String sql =
+                "SELECT " +
+                        "p.id as p_id, " +
+                        "p.title as p_title, " +
+                        "p.content as p_content, " +
+                        "p.image_url as p_imageUrl, " +
+                        "p.likes_count as p_likesCount, " +
+                        "t.id as t_id, " +
+                        "t.title as t_title, " +
+                        "(SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comment_count " +
+                        "FROM " + "( " +
+                        "SELECT " +
+                        "id, title, content, image_url, likes_count " +
+                        "FROM " + "posts" + " " +
+                        "ORDER BY id LIMIT ? OFFSET ?)" + " as p " +
+                        "LEFT JOIN post_tags as pt ON p.id = pt.post_id " +
+                        "LEFT JOIN tags as t ON pt.tag_id = t.id " +
+                        "WHERE t.id IN (" + inSql + ") ";
+
+        Object[] params = new Object[tagIds.size() + 2];
+        params[0] = limit;
+        params[1] = offset;
+        for (int i = 0; i < tagIds.size(); i++) {
+            params[i + 2] = tagIds.get(i);
+        }
+
+        return jdbcTemplate.query(sql, new PostWithTagsRowMapper(), params);
     }
 
     private Post mapFullPost(ResultSet rs, int rowNum) throws SQLException {

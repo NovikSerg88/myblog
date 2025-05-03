@@ -15,4 +15,6 @@ public interface PostRepository {
     Post findById(String id);
 
     List<Post> findAllPostsWithTags(int limit, int offset);
+
+    List<Post> findByTagIds(List<Long> Ids, int limit, int offset);
 }

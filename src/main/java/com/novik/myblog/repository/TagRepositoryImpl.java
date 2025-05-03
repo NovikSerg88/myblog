@@ -44,7 +44,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Optional<Tag> findByTitle(String title) {
+    public Optional<Tag> findTagByTitle(String title) {
         String sql = "SELECT id, title FROM tags WHERE title = ?";
 
         try {
