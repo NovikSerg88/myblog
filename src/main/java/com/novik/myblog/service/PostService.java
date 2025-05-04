@@ -18,4 +18,6 @@ public interface PostService {
     List<Post> findAll(int page, int size);
 
     List<Post> findByTagId(Long tagId, int page, int size);
+
+    void deletePostWithRelations(Long id);
 }

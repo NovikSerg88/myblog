@@ -14,4 +14,6 @@ public interface TagService {
     void savePostTags(Long postId, Long tagId);
 
     Optional<Tag> findTagByTitle(String title);
+
+    void deletePostTags(Long id);
 }

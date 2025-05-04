@@ -45,12 +45,8 @@
 
     <tr th:each="post : ${posts}">
         <td style="border-bottom:thin solid;">
-            <h2 th:text="${post.getTitle()}"></h2>
-            <p>
-                <a th:href="${'/posts/' + post.getId()}">
-                    <img th:src="@{${post.imageUrl}}" height="300">
-                </a>
-            </p>
+            <h2><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
+            <p><img th:src="@{${post.imageUrl}}" height="300"></p>
             <p th:text="${post.previewText}"></p>
             <p>
                 <span th:text="${'&#x1F44D; '+post.likesCount}"></span>

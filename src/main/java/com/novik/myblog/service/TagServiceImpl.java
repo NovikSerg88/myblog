@@ -47,6 +47,11 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findTagByTitle(title);
     }
 
+    @Override
+    public void deletePostTags(Long id) {
+        tagRepository.deleteAllRelationsByPostId(id);
+    }
+
     private Tag findOrCreateTag(String tagTitle) {
         return tagRepository.findTagByTitle(tagTitle)
                 .orElseGet(() -> {

@@ -4,10 +4,12 @@ import com.novik.myblog.dto.NewPostDto;
 
 import com.novik.myblog.dto.PostDto;
 import com.novik.myblog.dto.PostPreviewDto;
+import com.novik.myblog.exception.NotFoundException;
 import com.novik.myblog.mapper.PostMapper;
 import com.novik.myblog.model.Post;
 
 import com.novik.myblog.model.Tag;
+import com.novik.myblog.repository.CommentRepository;
 import com.novik.myblog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final CommentService commentService;
     private final TagService tagService;
     private final PostMapper postMapper;
 
@@ -58,7 +61,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto findById(Long id) {
-        return null;
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+        return postMapper.toDto(post);
     }
 
     @Override
@@ -70,6 +75,15 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findByTagId(Long tagId, int page, int size) {
         return postRepository.findByTagIds(List.of(tagId), size, page * size);
+    }
+
+    @Override
+    public void deletePostWithRelations(Long id) {
+        postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+        tagService.deletePostTags(id);
+        commentService.deletePostComments(id);
+        postRepository.deletePostById(id);
     }
 
 

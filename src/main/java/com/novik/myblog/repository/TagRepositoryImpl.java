@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,6 +75,13 @@ public class TagRepositoryImpl implements TagRepository {
                         "VALUES (?, ?)";
 
         jdbcTemplate.update(sql, postId, tagId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllRelationsByPostId(Long postId) {
+        String sql = "DELETE FROM post_tags WHERE post_id = ?";
+        jdbcTemplate.update(sql, postId);
     }
 
     public Tag mapRow(ResultSet rs, int rowNum) throws SQLException {

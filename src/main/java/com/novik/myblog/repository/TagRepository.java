@@ -14,5 +14,7 @@ public interface TagRepository {
     Optional<Long> findTagIdByTitle(String title);
 
     void savePostTags(Long postId, Long tagId);
+
+    void deleteAllRelationsByPostId(Long postId);
 }
 

@@ -3,9 +3,11 @@ package com.novik.myblog.repository;
 import com.novik.myblog.model.Comment;
 import com.novik.myblog.model.Post;
 import com.novik.myblog.model.Tag;
+import com.novik.myblog.repository.mapper.PostWithCommentsAndTagsRowMapper;
 import com.novik.myblog.repository.mapper.PostWithTagsRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -74,8 +76,35 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Post findById(String id) {
-        return null;
+    public Optional<Post> findById(Long id) {
+        String sql =
+                "SELECT DISTINCT " +  // Добавляем DISTINCT для устранения дубликатов
+                        "p.id as p_id, " +
+                        "p.title as p_title, " +
+                        "p.content as p_content, " +
+                        "p.image_url as p_imageUrl, " +
+                        "p.likes_count as p_likeCount, " +
+                        "c.id as c_id, " +
+                        "c.content as c_content, " +
+                        "t.id as t_id, " +
+                        "t.title as t_title, " +
+                        "(SELECT COUNT(*) FROM comments WHERE post_id = p.id) as comment_count " +
+                        "FROM posts p " +
+                        "LEFT JOIN comments c ON c.post_id = p.id " +
+                        "LEFT JOIN post_tags pt ON p.id = pt.post_id " +
+                        "LEFT JOIN tags t ON pt.tag_id = t.id " +
+                        "WHERE p.id = ?";
+
+        try {
+            Post post = jdbcTemplate.query(
+                    sql,
+                    new PostWithCommentsAndTagsRowMapper(),
+                    id
+            );
+            return Optional.ofNullable(post);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -132,6 +161,15 @@ public class PostRepositoryImpl implements PostRepository {
         }
 
         return jdbcTemplate.query(sql, new PostWithTagsRowMapper(), params);
+    }
+
+    @Override
+    public void deletePostById(Long id) {
+        String sql =
+                "DELETE FROM " + "posts" + " " +
+                        "WHERE id = ?";
+
+        jdbcTemplate.update(sql, id);
     }
 
     private Post mapFullPost(ResultSet rs, int rowNum) throws SQLException {
