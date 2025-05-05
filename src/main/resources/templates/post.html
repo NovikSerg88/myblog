@@ -19,7 +19,7 @@
 
             var newButton = document.createElement("button");
             newButton.innerHTML = "&#10003;";
-            newButton.style="float:right;"
+            newButton.style = "float:right;"
             newComment.parentNode.appendChild(newButton);
         }
 
@@ -37,7 +37,7 @@
 
             var newButton = document.createElement("button");
             newButton.innerHTML = "&#10003;";
-            newButton.style="float:right;"
+            newButton.style = "float:right;"
             form.appendChild(newButton);
         }
     </script>
@@ -50,7 +50,7 @@
 <table style="width:50%;margin-left:auto;margin-right:auto;">
     <tr>
         <td>
-            <form method="GET" th:action="${'/posts/'+post.id+'/edit'}">
+            <form method="GET" th:action="${'/my-blog/posts/'+post.id+'/edit'}">
                 <button style="float:right;">РЕДАКТИРОВАТЬ ПОСТ</button>
             </form>
         </td>
@@ -67,20 +67,21 @@
                 <img height="300" th:src="${'http://localhost:8080/images/'+post.id}">
             </p>
             <p>
-            <form th:action="${'/posts/'+post.id+'/like'}" method="post">
-                <button name="like" value="true">&#x1F44D;</button>
-                <span th:text="${post.likeCount}"></span>
-                <button name="like" value="false">&#128078;</button>
-                <span th:text="${'комментарии '+post.comments.size()}" style="float:right;"></span>
-            </form>
-            </p>
-            <p>
                 <span th:text="${post.tags}"></span>
             </p>
         </td>
     </tr>
     <tr>
         <td th:text="${post.content}"></td>
+    </tr>
+    <tr>
+        <td style="padding-top: 20px; padding-bottom: 20px;">
+            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display:inline;">
+                <button type="submit" style="background:none; border:none; cursor:pointer; font-size:1.2em;">
+                    👍 <span th:text="${post.likeCount}"></span>
+                </button>
+            </form>
+        </td>
     </tr>
     <tr>
         <td>
@@ -109,5 +110,12 @@
         </td>
     </tr>
 </table>
+<div th:if="${editingMode}">
+    <form th:action="@{/my-blog/posts/{id}/edit(id=${post.id})}" method="post">
+        <input type="text" th:value="${post.title}" name="title">
+        <textarea name="content" th:text="${post.content}"></textarea>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
 </body>
 </html>

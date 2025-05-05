@@ -11,6 +11,8 @@ public interface PostService {
 
     Long save(NewPostDto newPostDto);
 
+    int edit(Long id, NewPostDto newPostDto);
+
     List<PostPreviewDto> getPosts(String tagTitle, int page, int size);
 
     PostDto findById(Long id);
@@ -20,4 +22,6 @@ public interface PostService {
     List<Post> findByTagId(Long tagId, int page, int size);
 
     void deletePostWithRelations(Long id);
+
+    Post likePost(Long postId);
 }

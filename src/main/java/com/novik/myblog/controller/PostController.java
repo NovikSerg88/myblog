@@ -35,6 +35,13 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute NewPostDto newPostDto) {
+        log.info("Edit the post with id: {}", id);
+        postService.edit(id, newPostDto);
+        return "redirect:/posts";
+    }
+
     @GetMapping()
     public String getPosts(
             @RequestParam(value = "tag", required = false) String tag,
@@ -86,5 +93,12 @@ public class PostController {
     public String deletePost(@PathVariable("id") Long id) {
         postService.deletePostWithRelations(id);
         return "redirect:/posts";
+    }
+
+    @PostMapping("/{id}/like")
+    public String likePost(@PathVariable("id") Long id) {
+        postService.likePost(id);
+
+        return "redirect:/posts/" + id;
     }
 }

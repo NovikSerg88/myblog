@@ -20,4 +20,6 @@ public interface PostRepository {
     List<Post> findByTagIds(List<Long> Ids, int limit, int offset);
 
     void deletePostById(Long id);
+
+    int update(Post post);
 }

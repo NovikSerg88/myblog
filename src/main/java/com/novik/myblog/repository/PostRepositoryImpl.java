@@ -172,6 +172,25 @@ public class PostRepositoryImpl implements PostRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public int update(Post post) {
+        String sql =
+                "UPDATE " + "posts" + " " +
+                        "SET " +
+                        "title = ?, " +
+                        "content = ?, " +
+                        "image_url = ?, " +
+                        "likes_count = ? " +
+                        "WHERE id = ?";
+
+        return jdbcTemplate.update(sql,
+                post.getTitle(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getLikesCount(),
+                post.getId());
+    }
+
     private Post mapFullPost(ResultSet rs, int rowNum) throws SQLException {
         Long postId = rs.getLong("post_id");
 

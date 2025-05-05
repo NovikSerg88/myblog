@@ -35,9 +35,24 @@ public class PostServiceImpl implements PostService {
         Long postId = postRepository.save(post);
         Set<Tag> tags = tagService.getTags(newPostDto.getTags());
 
-        tags.stream().forEach(tag -> tagService.savePostTags(postId, tag.getId()));
+        tags.forEach(tag -> tagService.savePostTags(postId, tag.getId()));
 
         return postId;
+    }
+
+    @Override
+    public int edit(Long id, NewPostDto newPostDto) {
+        Post post = postMapper.toModel(newPostDto);
+        post.setId(id);
+        int updateCount = postRepository.update(post);
+
+        Set<Tag> newTags = tagService.getTags(newPostDto.getTags());
+
+        tagService.deletePostTags(id);
+
+        newTags.forEach(tag -> tagService.savePostTags(id, tag.getId()));
+
+        return updateCount;
     }
 
     @Override
@@ -84,6 +99,17 @@ public class PostServiceImpl implements PostService {
         tagService.deletePostTags(id);
         commentService.deletePostComments(id);
         postRepository.deletePostById(id);
+    }
+
+    @Override
+    public Post likePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new NotFoundException("Post with ID " + postId + " does not exist"));
+        post.setLikesCount(post.getLikesCount() + 1);
+
+        postRepository.update(post);
+
+        return post;
     }
 
 
