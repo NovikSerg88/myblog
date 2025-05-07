@@ -35,11 +35,19 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @GetMapping("/{id}/edit")
+    @PostMapping("/{id}/edit")
     public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute NewPostDto newPostDto) {
         log.info("Edit the post with id: {}", id);
         postService.edit(id, newPostDto);
-        return "redirect:/posts";
+        return "redirect:/posts/" + id;
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        PostDto postDto = postService.findById(id);
+        model.addAttribute("post", postDto);
+        model.addAttribute("editingMode", true);
+        return "post";
     }
 
     @GetMapping()
