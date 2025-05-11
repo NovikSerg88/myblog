@@ -6,7 +6,6 @@ import com.novik.myblog.dto.PostPreviewDto;
 import com.novik.myblog.model.Post;
 
 import com.novik.myblog.model.Tag;
-import com.novik.myblog.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 @Component
 public class PostMapper {
 
-    private final TagService tagService;
     private final CommentMapper commentMapper;
 
     public Post toModel(NewPostDto dto) {

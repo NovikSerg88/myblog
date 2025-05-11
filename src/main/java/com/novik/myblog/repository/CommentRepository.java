@@ -5,7 +5,6 @@ import com.novik.myblog.model.Comment;
 import java.util.Optional;
 
 public interface CommentRepository {
-    void deleteAllByPostId(long postId);
 
     Comment save(Comment comment);
 

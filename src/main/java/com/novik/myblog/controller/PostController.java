@@ -30,7 +30,8 @@ public class PostController {
 
     @PostMapping
     public String save(@Valid @ModelAttribute NewPostDto newPostDto) {
-        log.info("Save a new post: {}", newPostDto);
+        log.info("Save new post: {}", newPostDto);
+
         postService.save(newPostDto);
         return "redirect:/posts";
     }
@@ -38,12 +39,15 @@ public class PostController {
     @PostMapping("/{id}/edit")
     public String edit(@PathVariable("id") Long id, @Valid @ModelAttribute NewPostDto newPostDto) {
         log.info("Edit the post with id: {}", id);
+
         postService.edit(id, newPostDto);
         return "redirect:/posts/" + id;
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
+        log.info("Show edit form with id: {}", id);
+
         PostDto postDto = postService.findById(id);
         model.addAttribute("post", postDto);
         model.addAttribute("editingMode", true);
@@ -56,6 +60,8 @@ public class PostController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             Model model) {
+        log.info("Get posts with tag, page, size: {}, {}, {}", tag, page, size);
+
         List<Post> posts;
         if (tag != null && !tag.isEmpty()) {
             posts = tagService.findTagByTitle(tag)
@@ -79,18 +85,20 @@ public class PostController {
 
     @GetMapping("/add")
     public String showAddPostForm(Model model) {
+        log.info("Show add post form");
+
         model.addAttribute("post", null);
         return "add-post";
     }
 
     @GetMapping("/{id}")
     public String getPost(@PathVariable("id") Long id, Model model) {
+        log.info("Show post with id: {}", id);
 
         PostDto postDto = postService.findById(id);
         if (postDto == null) {
             return "error";
         }
-
         model.addAttribute("post", postDto);
         model.addAttribute("comments", postDto.getComments());
 
@@ -99,14 +107,17 @@ public class PostController {
 
     @PostMapping("/{id}/delete")
     public String deletePost(@PathVariable("id") Long id) {
+        log.info("Delete post with id: {}", id);
+
         postService.deletePostWithRelations(id);
         return "redirect:/posts";
     }
 
     @PostMapping("/{id}/like")
     public String likePost(@PathVariable("id") Long id) {
-        postService.likePost(id);
+        log.info("Like post with id: {}", id);
 
+        postService.likePost(id);
         return "redirect:/posts/" + id;
     }
 }

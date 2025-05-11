@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -63,11 +61,6 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Optional<Long> findTagIdByTitle(String title) {
-        return Optional.empty();
-    }
-
-    @Override
     public void savePostTags(Long postId, Long tagId) {
         String sql =
                 "INSERT INTO post_tags " +
@@ -82,12 +75,5 @@ public class TagRepositoryImpl implements TagRepository {
     public void deleteAllRelationsByPostId(Long postId) {
         String sql = "DELETE FROM post_tags WHERE post_id = ?";
         jdbcTemplate.update(sql, postId);
-    }
-
-    public Tag mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Tag(
-                rs.getLong("id"),
-                rs.getString("title")
-        );
     }
 }

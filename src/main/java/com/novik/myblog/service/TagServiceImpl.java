@@ -33,11 +33,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void addPostTags(Long postId) {
-
-    }
-
-    @Override
     public void savePostTags(Long postId, Long tagId) {
         tagRepository.savePostTags(postId, tagId);
     }

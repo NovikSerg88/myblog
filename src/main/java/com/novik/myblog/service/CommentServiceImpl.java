@@ -22,12 +22,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deletePostComments(Long postId) {
-
-    }
-
-    @Override
-    @Transactional
     public void updateComment(Long commentId, String text) {
         commentRepository.findById(commentId).ifPresent(comment -> {
             comment.setText(text);

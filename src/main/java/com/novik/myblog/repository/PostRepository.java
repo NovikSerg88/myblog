@@ -9,10 +9,6 @@ public interface PostRepository {
 
     Long save(Post post);
 
-    List<Post> findAll(int limit, int offset);
-
-    List<Post> findByTitle(String tag, int limit, int offset);
-
     Optional<Post> findById(Long id);
 
     List<Post> findAllPostsWithTags(int limit, int offset);

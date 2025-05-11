@@ -12,11 +12,11 @@ import lombok.NonNull;
 public class NewPostDto {
 
     @NonNull
-    @Size(min = 20)
+    @Size(min = 5, max = 100)
     public String title;
 
     @NonNull
-    @Size(min = 128)
+    @Size(min = 10, max = 5000)
     public String content;
 
     public String imageUrl;

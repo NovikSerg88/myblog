@@ -3,7 +3,6 @@ package com.novik.myblog.repository.mapper;
 import com.novik.myblog.model.Comment;
 import com.novik.myblog.model.Post;
 import com.novik.myblog.model.Tag;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,6 @@ public class PostWithCommentsAndTagsRowMapper implements ResultSetExtractor<Post
                 post.setCommentsCount(rs.getInt("comment_count"));
             }
 
-            // Обработка комментариев
             long commentId = rs.getLong("c_id");
             if (!rs.wasNull() && !comments.containsKey(commentId)) {
                 Comment comment = new Comment();
@@ -42,7 +40,6 @@ public class PostWithCommentsAndTagsRowMapper implements ResultSetExtractor<Post
                 comments.put(commentId, comment);
             }
 
-            // Обработка тегов
             long tagId = rs.getLong("t_id");
             if (!rs.wasNull() && !tags.containsKey(tagId)) {
                 Tag tag = new Tag();

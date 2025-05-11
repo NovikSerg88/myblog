@@ -2,7 +2,6 @@ package com.novik.myblog.repository.mapper;
 
 import com.novik.myblog.model.Post;
 import com.novik.myblog.model.Tag;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,6 @@ public class PostWithTagsRowMapper implements ResultSetExtractor<List<Post>> {
                 postsMap.put(postId, post);
             }
 
-            // Добавляем тег, если он есть
             Long tagId = rs.getLong("t_id");
             if (!rs.wasNull()) {
                 Tag tag = new Tag();

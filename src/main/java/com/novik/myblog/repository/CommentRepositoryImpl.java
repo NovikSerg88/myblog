@@ -15,12 +15,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void deleteAllByPostId(long postId) {
-        String sql = "DELETE FROM comments WHERE post_id = ?";
-        jdbcTemplate.update(sql, postId);
-    }
-
-    @Override
     public Comment save(Comment comment) {
         String sql = "INSERT INTO comments (content, post_id) VALUES (?, ?) RETURNING id";
         Long id = jdbcTemplate.queryForObject(sql, Long.class,
@@ -45,7 +39,6 @@ public class CommentRepositoryImpl implements CommentRepository {
             return Optional.empty();
         }
     }
-
 
     public void update(Comment comment) {
         String sql = "UPDATE comments SET content = ? WHERE id = ?";
