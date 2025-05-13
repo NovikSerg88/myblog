@@ -9,6 +9,7 @@ import com.novik.myblog.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,12 @@ public class PostMapper {
     }
 
     public PostPreviewDto toPreviewDto(Post post) {
+        Set<String> tagNames = post.getTags() == null
+                ? Collections.emptySet()
+                : post.getTags().stream()
+                .map(Tag::getTitle)
+                .collect(Collectors.toSet());
+
         return PostPreviewDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -34,7 +41,7 @@ public class PostMapper {
                 .imageUrl(post.getImageUrl())
                 .likesCount(post.getLikesCount())
                 .commentsCount(post.getCommentsCount())
-                .tags(post.getTags().stream().map(Tag::getTitle).collect(Collectors.toSet()))
+                .tags(tagNames)
                 .build();
     }
 

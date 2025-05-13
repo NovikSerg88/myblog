@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -29,8 +30,14 @@ public class PostController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public String save(@Valid @ModelAttribute NewPostDto newPostDto) {
+    public String save(@Valid @ModelAttribute NewPostDto newPostDto,
+                       BindingResult bindingResult, Model model) {
         log.info("Save new post: {}", newPostDto);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "add-post";
+        }
 
         postService.save(newPostDto);
         return "redirect:/posts";

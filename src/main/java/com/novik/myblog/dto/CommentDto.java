@@ -1,12 +1,14 @@
 package com.novik.myblog.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentDto {
 
     public Long id;

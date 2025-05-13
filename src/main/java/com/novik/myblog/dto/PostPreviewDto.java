@@ -26,5 +26,4 @@ public class PostPreviewDto {
     public int commentsCount;
 
     public Set<String> tags;
-
 }

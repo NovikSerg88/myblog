@@ -33,7 +33,6 @@ public class PostServiceIntegrationTests {
 
     @BeforeEach
     void setUp() {
-        // Очистка базы перед каждым тестом
         jdbcTemplate.update("DELETE FROM post_tags");
         jdbcTemplate.update("DELETE FROM comments");
         jdbcTemplate.update("DELETE FROM posts");

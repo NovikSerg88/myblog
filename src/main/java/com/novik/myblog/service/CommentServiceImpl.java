@@ -1,5 +1,6 @@
 package com.novik.myblog.service;
 
+import com.novik.myblog.dto.CommentDto;
 import com.novik.myblog.model.Comment;
 import com.novik.myblog.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,15 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    public void createComment(Long postId, String text) {
+    public CommentDto createComment(Long postId, String text) {
         Comment comment = new Comment();
         comment.setPostId(postId);
         comment.setText(text);
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        return CommentDto.builder()
+                .id(savedComment.getId())
+                .content(savedComment.getText())
+                .build();
     }
 
     @Override

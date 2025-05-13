@@ -1,10 +1,12 @@
 package com.novik.myblog.service;
 
+import com.novik.myblog.dto.CommentDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface CommentService {
-    void createComment(Long postId, String text);
+
+    CommentDto createComment(Long postId, String text);
 
     void updateComment(Long commentId, String text);
 

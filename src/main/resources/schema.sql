@@ -25,5 +25,5 @@ CREATE TABLE IF NOT EXISTS post_tags (
 CREATE TABLE IF NOT EXISTS comments(
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     content TEXT not null,
-    post_id BIGINT references posts(id) on delete cascade not null
+    post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE
 );

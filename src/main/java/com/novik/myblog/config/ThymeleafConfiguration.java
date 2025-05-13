@@ -17,6 +17,7 @@ public class ThymeleafConfiguration {
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML");
         resolver.setCharacterEncoding("UTF-8");
+        resolver.setCacheable(false);
         return resolver;
     }
 
@@ -24,6 +25,7 @@ public class ThymeleafConfiguration {
     public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver);
+        engine.setEnableSpringELCompiler(true);
         return engine;
     }
 

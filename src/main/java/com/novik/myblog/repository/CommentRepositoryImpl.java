@@ -2,10 +2,14 @@ package com.novik.myblog.repository;
 
 import com.novik.myblog.model.Comment;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -16,28 +20,32 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public Comment save(Comment comment) {
-        String sql = "INSERT INTO comments (content, post_id) VALUES (?, ?) RETURNING id";
-        Long id = jdbcTemplate.queryForObject(sql, Long.class,
-                comment.getText(),
-                comment.getPostId());
-        comment.setId(id);
+        String sql = "INSERT INTO comments (content, post_id) VALUES (?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, comment.getText());
+            ps.setLong(2, comment.getPostId());
+            return ps;
+        }, keyHolder);
+
+        comment.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return comment;
     }
 
-    public Optional<Comment> findById(Long id) {
-        String sql = "SELECT * FROM comments WHERE id = ?";
-        try {
-            Comment comment = jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
-                Comment c = new Comment();
-                c.setId(rs.getLong("id"));
-                c.setText(rs.getString("content"));
-                c.setPostId(rs.getLong("post_id"));
-                return c;
-            });
-            return Optional.ofNullable(comment);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public Optional<Comment> findById(Long postId) {
+        List<Comment> comments = jdbcTemplate.query(
+                "SELECT * FROM comments WHERE id = ?",
+                (rs, rowNum) -> new Comment(
+                        rs.getLong("id"),
+                        rs.getString("text"),
+                        rs.getLong("post_id")
+                ),
+                postId
+        );
+        return comments.isEmpty() ? Optional.empty() : Optional.of(comments.getFirst());
     }
 
     public void update(Comment comment) {
