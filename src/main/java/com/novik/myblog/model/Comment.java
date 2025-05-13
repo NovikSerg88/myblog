@@ -3,16 +3,13 @@ package com.novik.myblog.model;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Comment {
 
     private Long id;
 
-    @NonNull
     private String text;
 
-    @NonNull
     private Long postId;
-
 }

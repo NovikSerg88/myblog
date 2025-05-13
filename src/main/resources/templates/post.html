@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Пост</title>
+    <script>
+        function editComment(id) {
+            var comment = document.getElementById("comment" + id);
+            var newComment = document.createElement("textarea");
+            newComment.innerHTML = comment.innerHTML;
+            newComment.rows = 3;
+            newComment.name = "text";
+            newComment.style = "width:100%;";
+            comment.parentNode.replaceChild(newComment, comment);
+
+            var button = document.getElementById(id);
+            button.remove();
+
+            var newButton = document.createElement("button");
+            newButton.innerHTML = "&#10003;";
+            newButton.style = "float:right;"
+            newComment.parentNode.appendChild(newButton);
+        }
+
+        function addComment(id) {
+            var button = document.getElementById("addCommentButton");
+            button.remove();
+
+            var form = document.getElementById("addCommentForm");
+
+            var newComment = document.createElement("textarea");
+            newComment.rows = 3;
+            newComment.name = "text";
+            newComment.style = "width:100%;";
+            form.appendChild(newComment);
+
+            var newButton = document.createElement("button");
+            newButton.innerHTML = "&#10003;";
+            newButton.style = "float:right;"
+            form.appendChild(newButton);
+        }
+    </script>
+</head>
+
+<body>
+<a th:href="@{/posts}" style="float:right;">
+    <b>НА ГЛАВНУЮ &cudarrr;</b>
+</a>
+<table style="width:50%;margin-left:auto;margin-right:auto;">
+    <tr>
+        <td>
+            <form method="GET" th:action="${'/my-blog/posts/'+post.id+'/edit'}">
+                <button style="float:right;">РЕДАКТИРОВАТЬ ПОСТ</button>
+            </form>
+        </td>
+        <td>
+            <form method="POST" th:action="${'/my-blog/posts/'+post.id+'/delete'}">
+                <button style="float:right;">УДАЛИТЬ ПОСТ</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h2 th:text="${post.title}"></h2>
+            <p>
+                <img height="300" th:src="@{'/resources/images/' + ${post.id} + '.jpg'}">
+            </p>
+            <p>
+                <span th:text="${post.tags}"></span>
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td th:text="${post.content}"></td>
+    </tr>
+    <tr>
+        <td style="padding-top: 20px; padding-bottom: 20px;">
+            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display:inline;">
+                <button type="submit" style="background:none; border:none; cursor:pointer; font-size:1.2em;">
+                    👍 <span th:text="${post.likeCount}"></span>
+                </button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <hr>
+            <h2>Комментарии</h2>
+        </td>
+    </tr>
+    <tr th:each="comment : ${post.comments}">
+        <td style="border-left:thin solid grey;">
+            <form method="POST" th:action="${'/my-blog/posts/'+post.id+'/comments/'+comment.id}">
+                <span th:id="${'comment'+comment.id}" th:text="${comment.content}"></span>
+                <button th:id="${comment.id}" onclick="editComment(this.id)" style="float:right;">&#9998;</button>
+            </form>
+        </td>
+        <td>
+            <form method="POST" th:action="${'/my-blog/posts/'+post.id+'/comments/'+comment.id+'/delete'}">
+                <button style="float:right;">&#10007;</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form id="addCommentForm" th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post">
+                <button id="addCommentButton" style="float:right;" onclick="addComment()">Добавить комментарий</button>
+            </form>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <hr>
+            <h2>Комментарии (<span th:text="${post.comments.size()}">0</span>)</h2>
+        </td>
+    </tr>
+
+</table>
+<div th:if="${editingMode}">
+    <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post">
+        <input type="text" th:value="${post.title}" name="title">
+        <textarea name="content" th:text="${post.content}"></textarea>
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,9 +1,24 @@
 package com.novik.myblog.service;
 
 import com.novik.myblog.dto.NewPostDto;
+import com.novik.myblog.dto.PostDto;
 import com.novik.myblog.model.Post;
+
+import java.util.List;
 
 public interface PostService {
 
-    Post save(NewPostDto newPostDto);
+    Long save(NewPostDto newPostDto);
+
+    int edit(Long id, NewPostDto newPostDto);
+
+    PostDto findById(Long id);
+
+    List<Post> findAll(int page, int size);
+
+    List<Post> findByTagId(Long tagId, int page, int size);
+
+    void deletePostWithRelations(Long id);
+
+    Post likePost(Long postId);
 }
